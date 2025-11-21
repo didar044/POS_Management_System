@@ -13,10 +13,17 @@ function AddExpanse() {
   const [submitting, setSubmitting] = useState(false);
 
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   // Fetch categories on mount
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expensecategories')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expensecategories', {
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => {
         setCategories(data);
@@ -44,12 +51,16 @@ function AddExpanse() {
     try {
       const res = await fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expenses', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`, // token add
+          },
         body: JSON.stringify(payload),
       });
 
       if (res.ok) {
-        navigate('/pages/expanse/expanselist'); // redirect to expense list or wherever you want
+        navigate('/app/pages/expanse/expanselist'); // redirect to expense list or wherever you want
       } else {
         const errorData = await res.json();
         alert('Failed to add expense: ' + JSON.stringify(errorData));

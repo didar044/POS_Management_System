@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, NavLink } from 'react-router-dom';
+const token = localStorage.getItem('token');
 
 function EditCategorie() {
   const { id } = useParams();
@@ -19,7 +20,12 @@ function EditCategorie() {
 
   useEffect(() => {
     // Fetch brands
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands', {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  })
       .then((res) => res.json())
       .then((data) => setBrands(data.brands || []))
       .catch(() => setBrands([]));
@@ -28,7 +34,12 @@ function EditCategorie() {
   useEffect(() => {
     if (!id) return;
     setLoading(true);
-    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/caregoties/${id}`)
+    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/caregoties/${id}`, {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  })
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch category');
         return res.json();
@@ -90,14 +101,17 @@ function EditCategorie() {
 
     try {
       const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/caregoties/${id}`, {
-        method: 'POST',
+        method: 'POST',headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
         body: sendData,
       });
 
       const result = await res.json();
       if (res.ok) {
         alert('Category updated successfully!');
-        navigate('/pages/product/categorielist');
+        navigate('/app/pages/product/categorielist');
       } else {
         setError(result.message || 'Update failed');
       }
@@ -208,7 +222,7 @@ function EditCategorie() {
                 <button type="submit" className="btn btn-submit me-2" disabled={submitting}>
                   {submitting ? 'Updating...' : 'Update'}
                 </button>
-                <NavLink to="/pages/product/categorielist" className="btn btn-cancel" tabIndex="-1" aria-disabled={submitting}>
+                <NavLink to="/app/pages/product/categorielist" className="btn btn-cancel" tabIndex="-1" aria-disabled={submitting}>
                   Cancel
                 </NavLink>
               </div>

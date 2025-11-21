@@ -22,10 +22,10 @@ function SideBar() {
                 <span className="menu-arrow"></span>
               </a>
               <ul>              
-                <li><NavLink to="pages/product/productlist" end>Product List</NavLink></li>
-                <li><NavLink to="pages/product/productlist/add" >Add Product </NavLink></li>
-                <li><NavLink to="pages/product/brand">Brand </NavLink></li>
-                 <li><NavLink to="pages/product/categorielist">Category List</NavLink></li>
+                <li><NavLink to="/app/pages/product/productlist" end>Product List</NavLink></li>
+                <li><NavLink to="/app/pages/product/productlist/add" >Add Product </NavLink></li>
+                <li><NavLink to="/app/pages/product/brand">Brand </NavLink></li>
+                <li><NavLink to="/app/pages/product/categorielist">Category List</NavLink></li>
               </ul>
             </li>
                
@@ -37,9 +37,9 @@ function SideBar() {
                 <span className="menu-arrow"></span>
               </a>
               <ul>
-                <li><NavLink to="/pages/purchases/productlist" end>Purchase  List</NavLink></li> 
-                <li><NavLink to="/pages/purchases/productlist/add">Add Purchase </NavLink></li> 
-                <li><NavLink to="/pages/purchases/purchasesinvoice" >Purchase Invoice</NavLink></li> 
+                <li><NavLink to="/app/pages/purchases/productlist" end>Purchase  List</NavLink></li> 
+                <li><NavLink to="/app/pages/purchases/productlist/add">Add Purchase </NavLink></li> 
+                <li><NavLink to="/app/pages/purchases/purchasesinvoice" >Purchase Invoice</NavLink></li> 
               </ul>
             </li>
             <li className="submenu">
@@ -49,8 +49,8 @@ function SideBar() {
                 <span className="menu-arrow"></span>
               </a>
               <ul>
-                <li><NavLink to="/pages/supplier/supplierlist" end>Supplier  List</NavLink></li> 
-                <li><NavLink to="/pages/supplier/supplierlist/add">Add Supplier </NavLink></li> 
+                <li><NavLink to="/app/pages/supplier/supplierlist" end>Supplier  List</NavLink></li> 
+                <li><NavLink to="/app/pages/supplier/supplierlist/add">Add Supplier </NavLink></li> 
               </ul>
             </li>
 
@@ -61,9 +61,9 @@ function SideBar() {
                 <span className="menu-arrow"></span>
               </a> 
               <ul>
-                <li><NavLink to="/pages/sale/salelist" end>Sales List</NavLink></li> 
-                <li><NavLink to="/pages/sale/saleorder">Sale Order </NavLink></li> 
-                <li><NavLink to="/pages/sale/saleinvoice">Sale Money Receipt </NavLink></li> 
+                <li><NavLink to="/app/pages/sale/salelist" end>Sales List</NavLink></li> 
+                <li><NavLink to="/app/pages/sale/saleorder">Sale Order </NavLink></li> 
+                <li><NavLink to="/app/pages/sale/saleinvoice">Sale Money Receipt </NavLink></li> 
               </ul>
             </li>
             <li className="submenu">
@@ -73,8 +73,8 @@ function SideBar() {
                 <span className="menu-arrow"></span>
               </a>
               <ul>
-                <li><NavLink to="/pages/customer/customerlist" end>Customer List</NavLink></li> 
-                <li><NavLink to="/pages/customer/customerlist/add">Add Customer </NavLink></li> 
+                <li><NavLink to="/app/pages/customer/customerlist" end>Customer List</NavLink></li> 
+                <li><NavLink to="/app/pages/customer/customerlist/add">Add Customer </NavLink></li> 
                 
                 
               </ul>
@@ -87,8 +87,8 @@ function SideBar() {
                 <span className="menu-arrow"></span>
               </a>
               <ul>
-                <li><NavLink to="/pages/warehouse/warehouselist" end>Warehouse List</NavLink></li> 
-                <li><NavLink to="/pages/warehouse/warehouselist/add">Add Warehouse </NavLink></li> 
+                <li><NavLink to="/app/pages/warehouse/warehouselist" end>Warehouse List</NavLink></li> 
+                <li><NavLink to="/app/pages/warehouse/warehouselist/add">Add Warehouse </NavLink></li> 
               </ul>
             </li>
                
@@ -99,9 +99,9 @@ function SideBar() {
                 <span className="menu-arrow"></span>
               </a>
               <ul>
-                <li><NavLink to="/pages/stock/stocklist" >Stock List</NavLink></li>
-                <li><NavLink to="/pages/stocktransfer/stocktransferlist" >Stock Transfer List </NavLink></li>  
-                <li><NavLink to="/pages/stocktransfer/stocktransfer" >Stock Transfer </NavLink></li>  
+                <li><NavLink to="/app/pages/stock/stocklist" >Stock List</NavLink></li>
+                <li><NavLink to="/app/pages/stocktransfer/stocktransferlist" >Stock Transfer List </NavLink></li>  
+                <li><NavLink to="/app/pages/stocktransfer/stocktransfer" >Stock Transfer </NavLink></li>  
                 
               </ul>
             </li>
@@ -118,9 +118,9 @@ function SideBar() {
               </a>
               <ul>
 
-                <li><NavLink to="/pages/expanse/expanselist" end>Expanse </NavLink></li> 
-                 <li><NavLink to="/pages/expanse/expanselist/add">Add Expanse </NavLink></li> 
-                <li><NavLink to="/pages/expansecategorie/expansecategorielist" end>Expanse Categorie</NavLink></li> 
+                <li><NavLink to="/app/pages/expanse/expanselist" end>Expanse </NavLink></li> 
+                <li><NavLink to="/app/pages/expanse/expanselist/add">Add Expanse </NavLink></li> 
+                <li><NavLink to="/app/pages/expansecategorie/expansecategorielist" end>Expanse Categorie</NavLink></li> 
                 
               </ul>
             </li>

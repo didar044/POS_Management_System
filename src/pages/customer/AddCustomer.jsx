@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate, NavLink } from 'react-router-dom';
 
 function AddCustomer() {
+   const navigate = useNavigate(); 
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -15,34 +17,40 @@ function AddCustomer() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  const token = localStorage.getItem('token'); // token get
 
-    try {
-      const res = await fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/customers', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
+  try {
+    const res = await fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/customers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`, // token add
+      },
+      body: JSON.stringify(formData)
+    });
+
+    if (res.ok) {
+      alert('Customer added successfully!');
+      setFormData({
+        name: '',
+        phone: '',
+        email: '',
+        address: '',
+        description: '',
       });
-
-      if (res.ok) {
-        alert('Customer added successfully!');
-        setFormData({
-          name: '',
-          phone: '',
-          email: '',
-          address: '',
-          description: '',
-        });
-      } else {
-        alert('Failed to add customer.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Something went wrong.');
+      navigate('/app/pages/customer/customerlist'); 
+    } else {
+      const data = await res.json();
+      alert(data.message || 'Failed to add customer.');
     }
-  };
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Something went wrong.');
+  }
+};
+
 
   return (
     <div>

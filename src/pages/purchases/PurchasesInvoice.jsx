@@ -1,7 +1,4 @@
 
-
-
-
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -14,11 +11,19 @@ function PurchasesInvoice() {
   });
   const [loading, setLoading] = useState(true);
   const [openStatusId, setOpenStatusId] = useState(null);
+  const token = localStorage.getItem('token');
 
   const fetchPurchases = async (page = 1) => {
     setLoading(false);
     try {
-      const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/purchases?page=${page}`);
+      const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/purchases?page=${page}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  });
       const json = await res.json();
       setPurchasesData(json);
     } catch (error) {
@@ -105,7 +110,7 @@ if (loading) return <p>Loading Purchase List...</p>;
                           <td>
                             <div className="d-flex align-items-center gap-2">
                              
-                              <NavLink to={`/pages/purchases/purchasesreceipt/show/${purchase.id}`} title="Receipt">
+                              <NavLink to={`/app/pages/purchases/purchasesreceipt/show/${purchase.id}`} title="Receipt">
                                               <i className="bi bi-receipt" style={{ fontSize: 20 }}></i>
                               </NavLink>
                             </div>

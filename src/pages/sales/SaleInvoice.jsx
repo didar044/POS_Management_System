@@ -6,9 +6,16 @@ import { NavLink } from 'react-router-dom';
 
 function SaleInvoice() {
   const [salesData, setSalesData] = useState({ data: [] });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);const token = localStorage.getItem('token');
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => {
         setSalesData({ data });
@@ -87,7 +94,7 @@ function SaleInvoice() {
           </td>
           <td>
             <div className="d-flex align-items-center gap-2">
-              <NavLink to={`/pages/sale/receipt/show/${sale.id}`} title="Receipt">
+              <NavLink to={`/app/pages/sale/receipt/show/${sale.id}`} title="Receipt">
                 <i className="bi bi-receipt" style={{ fontSize: 20 }}></i>
               </NavLink>
             </div>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 function AddWarehouse() {
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
 
   const [form, setForm] = useState({
     name: '',
@@ -32,6 +33,7 @@ function AddWarehouse() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, 
       },
       body: JSON.stringify(form),
     })

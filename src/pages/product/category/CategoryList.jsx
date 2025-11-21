@@ -4,9 +4,16 @@ import { NavLink } from 'react-router-dom';
 function CategoryList() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/caregoties')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/caregoties', {
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then((res) => res.json())
       .then((data) => {
         setCategories(data);
@@ -25,6 +32,11 @@ function CategoryList() {
     try {
       const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/caregoties/${id}`, {
         method: 'DELETE',
+        headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`, // token add
+      },
       });
 
       if (res.ok) {
@@ -49,7 +61,7 @@ function CategoryList() {
           <h6>View/Search product Category</h6>
         </div>
         <div className="page-btn">
-          <NavLink to="/pages/product/categorielist/add" className="btn btn-added">
+          <NavLink to="/app/pages/product/categorielist/add" className="btn btn-added">
             <i className='bx bx-plus me-2'></i>
             Add Category
           </NavLink>
@@ -109,7 +121,7 @@ function CategoryList() {
                           />
                         </td>
                         <td>
-                          <NavLink className="me-3" to={`/pages/product/categorielist/edit/${cat.id}`}>
+                          <NavLink className="me-3" to={`/app/pages/product/categorielist/edit/${cat.id}`}>
                             <i className="bi bi-pencil-square" style={{ fontSize: '20px' }}></i>
                           </NavLink>
                           <button

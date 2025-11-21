@@ -1,5 +1,6 @@
 import  { useEffect, useState } from 'react';
 import {  useNavigate } from 'react-router-dom';
+const token = localStorage.getItem('token')
 
 function AddProduct() {
   const navigate = useNavigate();
@@ -24,14 +25,28 @@ function AddProduct() {
   });
 
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(json => setBrands(json.brands || []))
       .catch(err => console.error('Failed to fetch brands:', err));
   }, []);
 
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/caregoties')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/caregoties', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(json => {
         const data = Array.isArray(json) ? json : json.categories || json.data || [];
@@ -97,6 +112,11 @@ function AddProduct() {
     try {
       const res = await fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/products', {
         method: 'POST',
+        headers: {
+            // "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`, // token add
+          },
         body: form,
       });
 
@@ -104,7 +124,7 @@ function AddProduct() {
 
       if (res.ok) {
         alert('Product added successfully!');
-        navigate('/pages/product/productlist');
+        navigate('/app/pages/product/productlist');
       } else {
         console.error('Error response:', json);
         alert('Failed to add product');

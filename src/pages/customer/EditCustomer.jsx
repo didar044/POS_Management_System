@@ -15,30 +15,37 @@ function EditCustomer() {
 
   const [loading, setLoading] = useState(true);
   const [showToast, setShowToast] = useState({ visible: false, message: '', type: '' });
+  const token = localStorage.getItem('token');
 
   // Fetch existing customer data
   useEffect(() => {
-    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/customers/${id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Customer not found');
-        return res.json();
-      })
-      .then((data) => {
-        setFormData({
-          name: data.name || '',
-          email: data.email || '',
-          phone: data.phone || '',
-          address: data.address || '',
-          description: data.description || '',
-        });
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Fetch error:', err);
-        setShowToast({ visible: true, message: 'Failed to load customer data.', type: 'error' });
-        setLoading(false);
+  fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/customers/${id}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error('Customer not found');
+      return res.json();
+    })
+    .then((data) => {
+      setFormData({
+        name: data.name || '',
+        email: data.email || '',
+        phone: data.phone || '',
+        address: data.address || '',
+        description: data.description || '',
       });
-  }, [id]);
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.error('Fetch error:', err);
+      setShowToast({ visible: true, message: 'Failed to load customer data.', type: 'error' });
+      setLoading(false);
+    });
+}, [id]);
 
   // Handle input change
   const handleChange = (e) => {
@@ -54,31 +61,32 @@ function EditCustomer() {
     setShowToast({ visible: true, message, type });
     setTimeout(() => {
       setShowToast({ visible: false, message: '', type: '' });
-      if (type === 'success') navigate('/pages/customer/customerlist');
+      if (type === 'success') navigate('/app/pages/customer/customerlist');
     }, 2500);
   };
 
   // Handle form submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/customers/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/customers/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'Authorization': `Bearer ${token}`, // token add
+      },
+      body: JSON.stringify(formData),
+    });
 
-      if (!res.ok) throw new Error('Failed to update customer');
+    if (!res.ok) throw new Error('Failed to update customer');
 
-      showNotification('Customer updated successfully!', 'success');
-    } catch (err) {
-      console.error('Update error:', err);
-      showNotification('Something went wrong while updating', 'error');
-    }
-  };
+    showNotification('Customer updated successfully!', 'success');
+  } catch (err) {
+    console.error('Update error:', err);
+    showNotification('Something went wrong while updating', 'error');
+  }
+};
 
   if (loading) return <p>Loading customer data...</p>;
 

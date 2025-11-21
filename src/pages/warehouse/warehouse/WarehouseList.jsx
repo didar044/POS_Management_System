@@ -4,10 +4,18 @@ import { NavLink } from 'react-router-dom';
 function WarehouseList() {
   const [warehouses, setWarehouses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem('token');
 
   // Fetch warehouse data from API
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/warehouses')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/warehouses', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch warehouses');
         return res.json();
@@ -27,6 +35,11 @@ function WarehouseList() {
     if (window.confirm('Are you sure you want to delete this warehouse?')) {
       fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/warehouses/${id}`, {
         method: 'DELETE',
+        headers: {
+            // "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`, // token add
+          },
       })
         .then(res => {
           if (!res.ok) throw new Error('Delete failed');
@@ -90,7 +103,7 @@ function WarehouseList() {
                         <td>
                           <NavLink
                             className="me-3"
-                            to={`/pages/warehouse/warehouselist/edit/${warehouse.id}`}
+                            to={`/app/pages/warehouse/warehouselist/edit/${warehouse.id}`}
                           >
                             <i className="bi bi-pencil-square" style={{ fontSize: '20px' }}></i>
                           </NavLink>

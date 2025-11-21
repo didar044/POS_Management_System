@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { NavLink, useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { NavLink, useParams, useNavigate } from "react-router-dom";
 
 function EditSale() {
-  const { id } = useParams();  // Sale ID from route param
+  const { id } = useParams(); // Sale ID from route param
   const navigate = useNavigate();
 
   const [purchaseItems, setPurchaseItems] = useState([]);
@@ -10,16 +10,25 @@ function EditSale() {
   const [warehouses, setWarehouses] = useState([]);
   const [stocks, setStocks] = useState([]);
 
-  const [customerId, setCustomerId] = useState('');
-  const [warehouseId, setWarehouseId] = useState('');
-  const [saleDate, setSaleDate] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('cash');
-  const [status, setStatus] = useState('pending');
+  const [customerId, setCustomerId] = useState("");
+  const [warehouseId, setWarehouseId] = useState("");
+  const [saleDate, setSaleDate] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("cash");
+  const [status, setStatus] = useState("pending");
   const [paidAmount, setPaidAmount] = useState(0);
-  const [description, setDescription] = useState('');
-
+  const [description, setDescription] = useState("");
+  const token = localStorage.getItem("token");
   const [items, setItems] = useState([
-    { product_id: '', quantity: 1, unit_price: 0, discount: 0, tax_percent: 0, tax_amount: 0, subtotal: 0, available_quantity: 0 },
+    {
+      product_id: "",
+      quantity: 1,
+      unit_price: 0,
+      discount: 0,
+      tax_percent: 0,
+      tax_amount: 0,
+      subtotal: 0,
+      available_quantity: 0,
+    },
   ]);
 
   const [loading, setLoading] = useState(true);
@@ -27,41 +36,111 @@ function EditSale() {
   // Load supporting data (customers, warehouses, purchase items, stocks)
   useEffect(() => {
     Promise.all([
-      fetch("http://didar.intelsofts.com/Laravel_React/B_POS/public/api/purchasesitems").then(res => res.json()),
-      fetch("http://didar.intelsofts.com/Laravel_React/B_POS/public/api/customers").then(res => res.json()),
-      fetch("http://didar.intelsofts.com/Laravel_React/B_POS/public/api/warehouses").then(res => res.json()),
-      fetch("http://didar.intelsofts.com/Laravel_React/B_POS/public/api/stocks").then(res => res.json()),
-    ]).then(([purchaseItemsData, customersData, warehousesData, stocksData]) => {
-      setPurchaseItems(Array.isArray(purchaseItemsData) ? purchaseItemsData : (purchaseItemsData.data || []));
-      setCustomers(Array.isArray(customersData) ? customersData : (customersData.data || []));
-      setWarehouses(Array.isArray(warehousesData) ? warehousesData : (warehousesData.data || []));
-      setStocks(Array.isArray(stocksData) ? stocksData : []);
-    }).catch(err => {
-      console.error("Error loading reference data:", err);
-    });
+      fetch(
+        "http://didar.intelsofts.com/Laravel_React/B_POS/public/api/purchasesitems",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`, // token add
+          },
+        }
+      ).then((res) => res.json()),
+      fetch(
+        "http://didar.intelsofts.com/Laravel_React/B_POS/public/api/customers",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`, // token add
+          },
+        }
+      ).then((res) => res.json()),
+      fetch(
+        "http://didar.intelsofts.com/Laravel_React/B_POS/public/api/warehouses",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`, // token add
+          },
+        }
+      ).then((res) => res.json()),
+      fetch(
+        "http://didar.intelsofts.com/Laravel_React/B_POS/public/api/stocks",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`, // token add
+          },
+        }
+      ).then((res) => res.json()),
+    ])
+      .then(
+        ([purchaseItemsData, customersData, warehousesData, stocksData]) => {
+          setPurchaseItems(
+            Array.isArray(purchaseItemsData)
+              ? purchaseItemsData
+              : purchaseItemsData.data || []
+          );
+          setCustomers(
+            Array.isArray(customersData)
+              ? customersData
+              : customersData.data || []
+          );
+          setWarehouses(
+            Array.isArray(warehousesData)
+              ? warehousesData
+              : warehousesData.data || []
+          );
+          setStocks(Array.isArray(stocksData) ? stocksData : []);
+        }
+      )
+      .catch((err) => {
+        console.error("Error loading reference data:", err);
+      });
   }, []);
 
   // Load sale data by ID and prefill form
   useEffect(() => {
     if (!id) return;
     setLoading(true);
-    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales/${id}`)
-      .then(res => {
+    fetch(
+      `http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`, // token add
+        },
+      }
+    )
+      .then((res) => {
         if (!res.ok) throw new Error("Sale not found");
         return res.json();
       })
-      .then(data => {
-        setCustomerId(data.customer_id || '');
-        setWarehouseId(data.warehouse_id || '');
-        setSaleDate(data.sale_date ? data.sale_date.split('T')[0] : ''); // Format date YYYY-MM-DD
-        setPaymentMethod(data.payment_method || 'cash');
-        setStatus(data.status || 'pending');
+      .then((data) => {
+        setCustomerId(data.customer_id || "");
+        setWarehouseId(data.warehouse_id || "");
+        setSaleDate(data.sale_date ? data.sale_date.split("T")[0] : ""); // Format date YYYY-MM-DD
+        setPaymentMethod(data.payment_method || "cash");
+        setStatus(data.status || "pending");
         setPaidAmount(data.paid_amount || 0);
-        setDescription(data.description || '');
+        setDescription(data.description || "");
 
         // Map sale items with available quantity from stocks
-        const mappedItems = data.items.map(item => {
-          const stock = stocks.find(s => s.product_id === item.product_id && s.warehouse_id === data.warehouse_id);
+        const mappedItems = data.items.map((item) => {
+          const stock = stocks.find(
+            (s) =>
+              s.product_id === item.product_id &&
+              s.warehouse_id === data.warehouse_id
+          );
           return {
             product_id: item.product_id,
             quantity: item.quantity,
@@ -74,20 +153,26 @@ function EditSale() {
           };
         });
 
-        setItems(mappedItems.length ? mappedItems : [{
-          product_id: '',
-          quantity: 1,
-          unit_price: 0,
-          discount: 0,
-          tax_percent: 0,
-          tax_amount: 0,
-          subtotal: 0,
-          available_quantity: 0,
-        }]);
+        setItems(
+          mappedItems.length
+            ? mappedItems
+            : [
+                {
+                  product_id: "",
+                  quantity: 1,
+                  unit_price: 0,
+                  discount: 0,
+                  tax_percent: 0,
+                  tax_amount: 0,
+                  subtotal: 0,
+                  available_quantity: 0,
+                },
+              ]
+        );
 
         setLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         alert("Failed to load sale data.");
         setLoading(false);
@@ -98,7 +183,16 @@ function EditSale() {
   useEffect(() => {
     if (loading) return; // prevent reset during initial load
     setItems([
-      { product_id: '', quantity: 1, unit_price: 0, discount: 0, tax_percent: 0, tax_amount: 0, subtotal: 0, available_quantity: 0 },
+      {
+        product_id: "",
+        quantity: 1,
+        unit_price: 0,
+        discount: 0,
+        tax_percent: 0,
+        tax_amount: 0,
+        subtotal: 0,
+        available_quantity: 0,
+      },
     ]);
   }, [warehouseId]);
 
@@ -106,10 +200,13 @@ function EditSale() {
   const handleItemChange = (index, key, value) => {
     const updated = [...items];
 
-    if (['quantity', 'unit_price', 'discount', 'tax_percent'].includes(key)) {
+    if (["quantity", "unit_price", "discount", "tax_percent"].includes(key)) {
       let numVal = Number(value);
-      if (key === 'quantity') {
-        numVal = Math.min(Math.max(numVal, 1), updated[index].available_quantity || Infinity);
+      if (key === "quantity") {
+        numVal = Math.min(
+          Math.max(numVal, 1),
+          updated[index].available_quantity || Infinity
+        );
       }
       updated[index][key] = isNaN(numVal) ? 0 : numVal;
     } else {
@@ -136,16 +233,19 @@ function EditSale() {
 
     // Get stock in current warehouse
     const matchedStock = stocks.find(
-      s => s.product_id == productId && s.warehouse_id == warehouseId
+      (s) => s.product_id == productId && s.warehouse_id == warehouseId
     );
-    updated[index].available_quantity = matchedStock ? matchedStock.quantity : 0;
+    updated[index].available_quantity = matchedStock
+      ? matchedStock.quantity
+      : 0;
 
     // Latest purchase price
     const matchedPrice = purchaseItems
-      .filter(p => p.product_id == productId)
+      .filter((p) => p.product_id == productId)
       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-    updated[index].unit_price = matchedPrice.length > 0 ? parseFloat(matchedPrice[0].unit_price || 0) : 0;
+    updated[index].unit_price =
+      matchedPrice.length > 0 ? parseFloat(matchedPrice[0].unit_price || 0) : 0;
 
     // Recalculate
     const qty = updated[index].quantity || 1;
@@ -164,7 +264,16 @@ function EditSale() {
   const addItem = () => {
     setItems([
       ...items,
-      { product_id: '', quantity: 1, unit_price: 0, discount: 0, tax_percent: 0, tax_amount: 0, subtotal: 0, available_quantity: 0 },
+      {
+        product_id: "",
+        quantity: 1,
+        unit_price: 0,
+        discount: 0,
+        tax_percent: 0,
+        tax_amount: 0,
+        subtotal: 0,
+        available_quantity: 0,
+      },
     ]);
   };
 
@@ -178,7 +287,10 @@ function EditSale() {
     setItems(updated);
   };
 
-  const grandTotal = items.reduce((sum, item) => sum + parseFloat(item.subtotal || 0), 0);
+  const grandTotal = items.reduce(
+    (sum, item) => sum + parseFloat(item.subtotal || 0),
+    0
+  );
   const dueAmount = grandTotal - parseFloat(paidAmount || 0);
 
   // Submit updated sale data
@@ -196,7 +308,9 @@ function EditSale() {
         return;
       }
       if (item.quantity > item.available_quantity) {
-        alert(`Quantity for product ${item.product_id} exceeds available stock.`);
+        alert(
+          `Quantity for product ${item.product_id} exceeds available stock.`
+        );
         return;
       }
     }
@@ -209,7 +323,7 @@ function EditSale() {
       paid_amount: paidAmount,
       payment_method: paymentMethod,
       status,
-      items: items.map(item => ({
+      items: items.map((item) => ({
         product_id: item.product_id,
         quantity: item.quantity,
         unit_price: item.unit_price,
@@ -222,16 +336,22 @@ function EditSale() {
     };
 
     try {
-      const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales/${id}`, {
-        method: "PUT", // or PATCH depending on your backend
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch(
+        `http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales/${id}`,
+        {
+          method: "PUT", // or PATCH depending on your backend
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       const result = await res.json();
       if (res.ok) {
         alert("Sale updated successfully");
-        navigate('/pages/sale/salelist');
+        navigate("/app/pages/sale/salelist");
       } else {
         console.error(result);
         alert(result.message || "Error updating sale");
@@ -244,14 +364,16 @@ function EditSale() {
 
   // Filter products by warehouse stock
   const filteredProductIds = stocks
-    .filter(s => s.warehouse_id == warehouseId)
-    .map(s => s.product_id);
+    .filter((s) => s.warehouse_id == warehouseId)
+    .map((s) => s.product_id);
 
-  const uniqueProducts = [...new Map(
-    purchaseItems
-      .filter(p => filteredProductIds.includes(p.product_id))
-      .map(p => [p.product_id, p])
-  ).values()];
+  const uniqueProducts = [
+    ...new Map(
+      purchaseItems
+        .filter((p) => filteredProductIds.includes(p.product_id))
+        .map((p) => [p.product_id, p])
+    ).values(),
+  ];
 
   if (loading) return <p>Loading...</p>;
 
@@ -267,37 +389,57 @@ function EditSale() {
       <form onSubmit={handleSubmit}>
         <div className="card">
           <div className="card-body">
-
             {/* Customer, Warehouse, Sale Date, Payment Method */}
             <div className="row">
               <div className="col-lg-3 col-sm-6 col-12">
                 <label>Customer</label>
-                <select value={customerId} onChange={e => setCustomerId(e.target.value)} required>
+                <select
+                  value={customerId}
+                  onChange={(e) => setCustomerId(e.target.value)}
+                  required
+                >
                   <option value="">Select Customer</option>
-                  {customers.map(c => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
+                  {customers.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div className="col-lg-3 col-sm-6 col-12">
                 <label>Warehouse</label>
-                <select value={warehouseId} onChange={e => setWarehouseId(e.target.value)} required>
+                <select
+                  value={warehouseId}
+                  onChange={(e) => setWarehouseId(e.target.value)}
+                  required
+                >
                   <option value="">Select Warehouse</option>
-                  {warehouses.map(w => (
-                    <option key={w.id} value={w.id}>{w.name}</option>
+                  {warehouses.map((w) => (
+                    <option key={w.id} value={w.id}>
+                      {w.name}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div className="col-lg-3 col-sm-6 col-12">
                 <label>Sale Date</label>
-                <input type="date" value={saleDate} onChange={e => setSaleDate(e.target.value)} required />
+                <input
+                  type="date"
+                  value={saleDate}
+                  onChange={(e) => setSaleDate(e.target.value)}
+                  required
+                />
               </div>
 
               <div className="col-lg-3 col-sm-6 col-12">
                 <label>Payment Method</label>
-                <select value={paymentMethod} onChange={e => setPaymentMethod(e.target.value)} required>
+                <select
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  required
+                >
                   <option value="cash">Cash</option>
                   <option value="card">Card</option>
                   <option value="mobile">Mobile</option>
@@ -328,12 +470,14 @@ function EditSale() {
                       <td>
                         <select
                           value={item.product_id}
-                          onChange={e => onProductChange(index, e.target.value)}
+                          onChange={(e) =>
+                            onProductChange(index, e.target.value)
+                          }
                           required
                           disabled={!warehouseId}
                         >
                           <option value="">Select</option>
-                          {uniqueProducts.map(p => (
+                          {uniqueProducts.map((p) => (
                             <option key={p.product_id} value={p.product_id}>
                               {p.product?.name || `Product #${p.product_id}`}
                             </option>
@@ -347,12 +491,18 @@ function EditSale() {
                           value={item.quantity}
                           min="1"
                           max={item.available_quantity}
-                          onChange={e => {
+                          onChange={(e) => {
                             const val = e.target.value;
-                            if (val === '' || (Number(val) <= item.available_quantity && Number(val) >= 1)) {
-                              handleItemChange(index, 'quantity', val);
+                            if (
+                              val === "" ||
+                              (Number(val) <= item.available_quantity &&
+                                Number(val) >= 1)
+                            ) {
+                              handleItemChange(index, "quantity", val);
                             } else {
-                              alert(`Only ${item.available_quantity} units available in stock.`);
+                              alert(
+                                `Only ${item.available_quantity} units available in stock.`
+                              );
                             }
                           }}
                           disabled={!item.product_id}
@@ -362,7 +512,13 @@ function EditSale() {
                         <input
                           type="number"
                           value={item.unit_price}
-                          onChange={e => handleItemChange(index, 'unit_price', e.target.value)}
+                          onChange={(e) =>
+                            handleItemChange(
+                              index,
+                              "unit_price",
+                              e.target.value
+                            )
+                          }
                           disabled={!item.product_id}
                         />
                       </td>
@@ -370,7 +526,9 @@ function EditSale() {
                         <input
                           type="number"
                           value={item.discount}
-                          onChange={e => handleItemChange(index, 'discount', e.target.value)}
+                          onChange={(e) =>
+                            handleItemChange(index, "discount", e.target.value)
+                          }
                           disabled={!item.product_id}
                         />
                       </td>
@@ -378,7 +536,13 @@ function EditSale() {
                         <input
                           type="number"
                           value={item.tax_percent}
-                          onChange={e => handleItemChange(index, 'tax_percent', e.target.value)}
+                          onChange={(e) =>
+                            handleItemChange(
+                              index,
+                              "tax_percent",
+                              e.target.value
+                            )
+                          }
                           disabled={!item.product_id}
                         />
                       </td>
@@ -390,7 +554,11 @@ function EditSale() {
                           className="btn btn-danger btn-sm"
                           onClick={() => removeItem(index)}
                           disabled={items.length === 1}
-                          title={items.length === 1 ? "At least one item required" : "Remove Item"}
+                          title={
+                            items.length === 1
+                              ? "At least one item required"
+                              : "Remove Item"
+                          }
                         >
                           X
                         </button>
@@ -404,7 +572,7 @@ function EditSale() {
                 className="btn btn-primary btn-sm"
                 onClick={addItem}
                 disabled={!warehouseId}
-                style={{ marginTop:'15px'}}
+                style={{ marginTop: "15px" }}
               >
                 Add Item
               </button>
@@ -419,7 +587,7 @@ function EditSale() {
                   min="0"
                   step="0.01"
                   value={paidAmount}
-                  onChange={e => setPaidAmount(e.target.value)}
+                  onChange={(e) => setPaidAmount(e.target.value)}
                 />
               </div>
               <div className="col-lg-4">
@@ -435,7 +603,11 @@ function EditSale() {
             {/* Status */}
             <div className="col-lg-3 col-sm-6 col-12 mt-2">
               <label>Status</label>
-              <select value={status} onChange={e => setStatus(e.target.value)} required>
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                required
+              >
                 <option value="pending">Pending</option>
                 <option value="completed">Completed</option>
                 <option value="cancelled">Cancelled</option>
@@ -448,7 +620,7 @@ function EditSale() {
               <textarea
                 className="form-control"
                 value={description}
-                onChange={e => setDescription(e.target.value)}
+                onChange={(e) => setDescription(e.target.value)}
               ></textarea>
             </div>
 
@@ -457,11 +629,10 @@ function EditSale() {
               <button type="submit" className="btn btn-submit me-2">
                 Update
               </button>
-              <NavLink to="/pages/sale/salelist" className="btn btn-cancel">
+              <NavLink to="/app/pages/sale/salelist" className="btn btn-cancel">
                 Cancel
               </NavLink>
             </div>
-
           </div>
         </div>
       </form>

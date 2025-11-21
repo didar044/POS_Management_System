@@ -8,9 +8,17 @@ function EditExpenseCategorie() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(true);
+    const token = localStorage.getItem('token');
 
   useEffect(() => {
-    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expensecategories/${id}`)
+    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expensecategories/${id}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  }
+    )
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch');
         return res.json();
@@ -34,12 +42,15 @@ function EditExpenseCategorie() {
     try {
       const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expensecategories/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'Authorization': `Bearer ${token}`, 
+         },
         body: JSON.stringify(payload),
       });
 
       if (res.ok) {
-        navigate('/pages/expansecategorie/expansecategorielist');
+        navigate('/app/pages/expansecategorie/expansecategorielist');
       } else {
         console.error('Update failed');
       }
@@ -91,7 +102,7 @@ function EditExpenseCategorie() {
                 <button type="submit" className="btn btn-submit me-2">
                   Submit
                 </button>
-                <NavLink to="/pages/expansecategorie/expansecategorielist" className="btn btn-cancel">
+                <NavLink to="/app/pages/expansecategorie/expansecategorielist" className="btn btn-cancel">
                   Cancel
                 </NavLink>
               </div>

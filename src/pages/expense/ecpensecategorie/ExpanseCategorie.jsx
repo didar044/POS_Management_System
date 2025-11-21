@@ -4,26 +4,44 @@ import { NavLink } from 'react-router-dom';
 function ExpanseCategorie() {
   const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expensecategories')
-      .then(res => res.json())
-      .then(data => setCategories(data))
-      .catch(err => console.error('Failed to fetch categories:', err));
-  }, []);
+const token = localStorage.getItem('token'); // token get
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this category?')) return;
+// Fetch categories
+useEffect(() => {
+  fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expensecategories', {
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
+    .then(res => res.json())
+    .then(data => setCategories(data))
+    .catch(err => console.error('Failed to fetch categories:', err));
+}, []);
 
-    try {
-      await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expensecategories/${id}`, {
-        method: 'DELETE',
-      });
+// Delete category
+const handleDelete = async (id) => {
+  if (!window.confirm('Are you sure you want to delete this category?')) return;
 
-      setCategories(categories.filter(category => category.id !== id));
-    } catch (error) {
-      console.error('Delete failed:', error);
-    }
-  };
+  try {
+    const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expensecategories/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'Authorization': `Bearer ${token}`, // token add
+      },
+    });
+
+    if (!res.ok) throw new Error('Delete failed');
+
+    setCategories(categories.filter(category => category.id !== id));
+  } catch (error) {
+    console.error('Delete failed:', error);
+  }
+};
+
 
   return (
     <div>
@@ -33,7 +51,7 @@ function ExpanseCategorie() {
           <h6>Manage your Expense Categories</h6>
         </div>
         <div className="page-btn">
-          <NavLink to="/pages/expansecategorie/expansecategorielist/add" className="btn btn-added">
+          <NavLink to="/app/pages/expansecategorie/expansecategorielist/add" className="btn btn-added">
             <i className='bx bx-plus me-2'></i> Add Category
           </NavLink>
         </div>
@@ -59,7 +77,7 @@ function ExpanseCategorie() {
                       <td>{cat.name}</td>
                       <td>{cat.description || 'No Description'}</td>
                       <td>
-                        <NavLink to={`/pages/expansecategorie/expansecategorielist/edit/${cat.id}`} className="me-3">
+                        <NavLink to={`/app/pages/expansecategorie/expansecategorielist/edit/${cat.id}`} className="me-3">
                           <i className="bi bi-pencil-square" style={{ fontSize: '20px' }}></i>
                         </NavLink>
                         <button onClick={() => handleDelete(cat.id)} className="btn btn-link p-0">

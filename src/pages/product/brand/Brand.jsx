@@ -3,14 +3,23 @@ import { NavLink } from 'react-router-dom';
 
 function Brand() {
   const [brands, setBrands] = useState([]);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     fetchBrands();
   }, []);
+  
 
   const fetchBrands = async () => {
     try {
-      const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands`);
+      const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  });
       const data = await res.json();
       setBrands(data.brands || []);
     } catch (err) {
@@ -25,6 +34,7 @@ function Brand() {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`, 
         },
       });
 
@@ -49,7 +59,7 @@ function Brand() {
           <h6>Manage your Brand</h6>
         </div>
         <div className="page-btn">
-          <NavLink to="/pages/product/brand/add" className="btn btn-added">
+          <NavLink to="/app/pages/product/brand/add" className="btn btn-added">
             <i className='bx bx-plus me-2'></i> Add Brand
           </NavLink>
         </div>
@@ -83,7 +93,7 @@ function Brand() {
                       <td>{brand.name}</td>
                       <td>{brand.description}</td>
                       <td>
-                        <NavLink to={`/pages/product/brand/edit/${brand.id}`} className="me-3">
+                        <NavLink to={`/app/pages/product/brand/edit/${brand.id}`} className="me-3">
                           <i className="bi bi-pencil-square" style={{ fontSize: '20px' }}></i>
                         </NavLink>
                         <button onClick={() => handleDelete(brand.id)} className="btn btn-link p-0">

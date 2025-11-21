@@ -1,12 +1,10 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
-
+import React from "react";
+import { useEffect, useState } from "react";
 
 function DashBoard() {
-
   //  const [loading, setLoading] = useState(false);
 
-    const [dashboardData, setDashboardData] = useState({
+  const [dashboardData, setDashboardData] = useState({
     totalpurchase: 0,
     totalpurchasedue: 0,
     totalsale: 0,
@@ -18,38 +16,55 @@ function DashBoard() {
   });
 
   useEffect(() => {
-    fetch("http://didar.intelsofts.com/Laravel_React/B_POS/public/api/dashboards")
+    const token = localStorage.getItem("token");
+    fetch(
+      "http://didar.intelsofts.com/Laravel_React/B_POS/public/api/dashboards",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => setDashboardData(data))
       .catch((err) => console.error("Dashboard API error:", err));
   }, []);
 
-
   const [products, setProducts] = useState([]);
-
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/products');
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(
+          "http://didar.intelsofts.com/Laravel_React/B_POS/public/api/products",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const result = await response.json();
 
         if (Array.isArray(result.data)) {
           // Get the first 4 products from the 'data' field
           setProducts(result.data.slice(-4));
         } else {
-          console.error('Unexpected API format:', result);
+          console.error("Unexpected API format:", result);
         }
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
       }
     };
 
     fetchProducts();
   }, []);
-console.log(products);
-  
-  if (products.length === 0) return <p>Loading Purchase List...</p>;
+  console.log(products);
+
+  if (products.length === 0) return <p>Loading ...</p>;
   return (
     <>
       <div className="row">
@@ -57,12 +72,16 @@ console.log(products);
           <div className="dash-widget">
             <div className="dash-widgetimg">
               <span>
-                  <i className="bi-credit-card" style={{color:'#070738',fontSize:'20px'}}></i> 
+                <i
+                  className="bi-credit-card"
+                  style={{ color: "#070738", fontSize: "20px" }}
+                ></i>
               </span>
             </div>
             <div className="dash-widgetcontent">
               <h5>
-                $ <span className="counters" >
+                ${" "}
+                <span className="counters">
                   {dashboardData.totalpurchase.toLocaleString()}
                 </span>
               </h5>
@@ -70,19 +89,25 @@ console.log(products);
             </div>
           </div>
         </div>
-        
+
         <div className="col-lg-3 col-sm-6 col-12">
           <div className="dash-widget dash1">
             <div className="dash-widgetimg">
               <span>
-                <i className=" bi bi-cash-coin me-2" style={{color:'green',fontSize:'20px'}}></i>
+                <i
+                  className=" bi bi-cash-coin me-2"
+                  style={{ color: "green", fontSize: "20px" }}
+                ></i>
               </span>
             </div>
             <div className="dash-widgetcontent">
               <h5>
-                $ <span className="counters" >{dashboardData.totalpurchasedue.toLocaleString()}</span>
+                ${" "}
+                <span className="counters">
+                  {dashboardData.totalpurchasedue.toLocaleString()}
+                </span>
               </h5>
-              <h6>     Total Purchase Due </h6>
+              <h6> Total Purchase Due </h6>
             </div>
           </div>
         </div>
@@ -90,13 +115,18 @@ console.log(products);
           <div className="dash-widget dash3">
             <div className="dash-widgetimg">
               <span>
-                
-                <i className="bi bi-cash-stack me-2" style={{color:'orange',fontSize:'20px'}} ></i>
+                <i
+                  className="bi bi-cash-stack me-2"
+                  style={{ color: "orange", fontSize: "20px" }}
+                ></i>
               </span>
             </div>
             <div className="dash-widgetcontent">
               <h5>
-                $ <span className="counters" >{dashboardData.totalsale.toLocaleString()}</span>
+                ${" "}
+                <span className="counters">
+                  {dashboardData.totalsale.toLocaleString()}
+                </span>
               </h5>
               <h6>Total Sales</h6>
             </div>
@@ -106,19 +136,24 @@ console.log(products);
           <div className="dash-widget dash2">
             <div className="dash-widgetimg">
               <span>
-                <i className=" bi bi-coin me-2" style={{color:'#173317', fontSize:'20px'}} ></i>
+                <i
+                  className=" bi bi-coin me-2"
+                  style={{ color: "#173317", fontSize: "20px" }}
+                ></i>
               </span>
             </div>
             <div className="dash-widgetcontent">
               <h5>
                 {/* $ <span className="counters" data-count="{dashboardData.totalsaledue.toLocaleString()}">{dashboardData.totalsaledue.toLocaleString()}</span> */}
-               $ <span className="counters" >{dashboardData.totalsaledue.toLocaleString()}</span>
+                ${" "}
+                <span className="counters">
+                  {dashboardData.totalsaledue.toLocaleString()}
+                </span>
               </h5>
               <h6>Total Sale Due</h6>
             </div>
           </div>
         </div>
-        
 
         <div className="col-lg-3 col-sm-6 col-12 d-flex">
           <div className="dash-count">
@@ -127,7 +162,7 @@ console.log(products);
               <h5>Customers</h5>
             </div>
             <div className="dash-imgs">
-              <i className="bi bi-person " style={{fontSize:'50px'}}></i>
+              <i className="bi bi-person " style={{ fontSize: "50px" }}></i>
             </div>
           </div>
         </div>
@@ -138,7 +173,10 @@ console.log(products);
               <h5>Suppliers</h5>
             </div>
             <div className="dash-imgs">
-              <i className="bi bi-person-check-fill" style={{fontSize:'50px'}}></i>
+              <i
+                className="bi bi-person-check-fill"
+                style={{ fontSize: "50px" }}
+              ></i>
             </div>
           </div>
         </div>
@@ -149,7 +187,7 @@ console.log(products);
               <h5>Purchase Invoice</h5>
             </div>
             <div className="dash-imgs">
-              <i class="bi bi-receipt" style={{fontSize:'50px'}}></i>
+              <i class="bi bi-receipt" style={{ fontSize: "50px" }}></i>
             </div>
           </div>
         </div>
@@ -160,7 +198,7 @@ console.log(products);
               <h5>Sales Invoice</h5>
             </div>
             <div className="dash-imgs">
-              <i class="bi bi-file-earmark" style={{fontSize:'50px'}}></i>
+              <i class="bi bi-file-earmark" style={{ fontSize: "50px" }}></i>
             </div>
           </div>
         </div>
@@ -195,7 +233,10 @@ console.log(products);
                       className="ms-2"
                     />
                   </button>
-                  <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <ul
+                    className="dropdown-menu"
+                    aria-labelledby="dropdownMenuButton"
+                  >
                     <li>
                       <a href="javascript:void(0);" className="dropdown-item">
                         2022
@@ -221,7 +262,6 @@ console.log(products);
           </div>
         </div>
 
-
         <div className="col-lg-5 col-sm-12 col-12 d-flex">
           <div className="card flex-fill">
             <div className="card-header pb-0 d-flex justify-content-between align-items-center">
@@ -231,8 +271,16 @@ console.log(products);
                   <i className="fa fa-ellipsis-v"></i>
                 </a>
                 <ul className="dropdown-menu">
-                  <li><a href="/productlist" className="dropdown-item">Product List</a></li>
-                  <li><a href="/addproduct" className="dropdown-item">Product Add</a></li>
+                  <li>
+                    <a href="/productlist" className="dropdown-item">
+                      Product List
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/addproduct" className="dropdown-item">
+                      Product Add
+                    </a>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -251,20 +299,27 @@ console.log(products);
                       <tr key={product.id}>
                         <td>{index + 1}</td>
                         <td className="productimgname">
-                          
-                            <img
-                              src={`http://didar.intelsofts.com/Laravel_React/B_POS/public/img/product/${product.img}`}
-                              alt={product.name}
-                              style={{ width: '40px', height: '40px', objectFit: 'cover' }}
-                            />
-                          
+                          <img
+                            src={`http://didar.intelsofts.com/Laravel_React/B_POS/public/img/product/${product.img}`}
+                            alt={product.name}
+                            style={{
+                              width: "40px",
+                              height: "40px",
+                              objectFit: "cover",
+                            }}
+                          />
+
                           {product.name}
                         </td>
                         <td>${product.price}</td>
                       </tr>
                     ))}
                     {products.length === 0 && (
-                      <tr><td colSpan="3" className="text-center">No recent products found.</td></tr>
+                      <tr>
+                        <td colSpan="3" className="text-center">
+                          No recent products found.
+                        </td>
+                      </tr>
                     )}
                   </tbody>
                 </table>
@@ -292,10 +347,15 @@ console.log(products);
               <tbody>
                 <tr>
                   <td>1</td>
-                  <td><a href="#">IT0001</a></td>
+                  <td>
+                    <a href="#">IT0001</a>
+                  </td>
                   <td className="productimgname">
                     <a className="product-img" href="productlist.html">
-                      <img src="assets/img/product/product2.jpg" alt="product" />
+                      <img
+                        src="assets/img/product/product2.jpg"
+                        alt="product"
+                      />
                     </a>
                     <a href="productlist.html">Orange</a>
                   </td>
@@ -305,10 +365,15 @@ console.log(products);
                 </tr>
                 <tr>
                   <td>2</td>
-                  <td><a href="#">IT0002</a></td>
+                  <td>
+                    <a href="#">IT0002</a>
+                  </td>
                   <td className="productimgname">
                     <a className="product-img" href="productlist.html">
-                      <img src="assets/img/product/product3.jpg" alt="product" />
+                      <img
+                        src="assets/img/product/product3.jpg"
+                        alt="product"
+                      />
                     </a>
                     <a href="productlist.html">Pineapple</a>
                   </td>
@@ -318,10 +383,15 @@ console.log(products);
                 </tr>
                 <tr>
                   <td>3</td>
-                  <td><a href="#">IT0003</a></td>
+                  <td>
+                    <a href="#">IT0003</a>
+                  </td>
                   <td className="productimgname">
                     <a className="product-img" href="productlist.html">
-                      <img src="assets/img/product/product4.jpg" alt="product" />
+                      <img
+                        src="assets/img/product/product4.jpg"
+                        alt="product"
+                      />
                     </a>
                     <a href="productlist.html">Strawberry</a>
                   </td>
@@ -331,10 +401,15 @@ console.log(products);
                 </tr>
                 <tr>
                   <td>4</td>
-                  <td><a href="#">IT0004</a></td>
+                  <td>
+                    <a href="#">IT0004</a>
+                  </td>
                   <td className="productimgname">
                     <a className="product-img" href="productlist.html">
-                      <img src="assets/img/product/product5.jpg" alt="product" />
+                      <img
+                        src="assets/img/product/product5.jpg"
+                        alt="product"
+                      />
                     </a>
                     <a href="productlist.html">Avocado</a>
                   </td>

@@ -4,10 +4,18 @@ import { NavLink } from 'react-router-dom';
 function Expense() {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
+   const token = localStorage.getItem('token');
 
   // Fetch expenses data on component mount
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expenses')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expenses', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => {
         setExpenses(data);
@@ -26,6 +34,11 @@ function Expense() {
     try {
       const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expenses/${id}`, {
         method: 'DELETE',
+        headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`, // token add
+      },
       });
       if (res.ok) {
         setExpenses(expenses.filter(expense => expense.id !== id));
@@ -81,7 +94,7 @@ function Expense() {
         <td>{expense.expense_date}</td>
         <td>{expense.description || 'N/A'}</td>
         <td>
-          <NavLink to={`/pages/expanse/expanse/edit/${expense.id}`} className="me-3">
+          <NavLink to={`/app/pages/expanse/expanse/edit/${expense.id}`} className="me-3">
             <i className="bi bi-pencil-square" style={{ fontSize: '20px' }}></i>
           </NavLink>
           <button

@@ -9,11 +9,19 @@ function ProductList() {
     total: 0,
   });
   const [loading, setLoading] = useState(false);
+  const token = localStorage.getItem('token');
 
   const fetchProducts = async (page = 1) => {
     setLoading(true);
     try {
-      const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/products?page=${page}`);
+      const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/products?page=${page}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  });
       const json = await res.json();
       setProductsData(json);
     } catch (error) {
@@ -32,6 +40,11 @@ function ProductList() {
     try {
       const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/products/${id}`, {
         method: 'DELETE',
+         headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`, 
+        },
       });
       if (res.ok) {
         fetchProducts(productsData.current_page);
@@ -115,12 +128,12 @@ function ProductList() {
                     <td> 
                         <div className="d-flex align-items-center gap-2">
                         
-                          <NavLink to={`/pages/product/productlist/edit/${product.id}`} title="Edit">
+                          <NavLink to={`/app/pages/product/productlist/edit/${product.id}`} title="Edit">
                             <i className="bi bi-pencil-square" style={{ fontSize: 20 }}></i>
                           </NavLink>
 
                           
-                          <NavLink to={`/pages/product/productlist/show/${product.id}`} title="View">
+                          <NavLink to={`/app/pages/product/productlist/show/${product.id}`} title="View">
                             <i className="bi bi-eye" style={{ fontSize: 20 }}></i>
                           </NavLink>
 

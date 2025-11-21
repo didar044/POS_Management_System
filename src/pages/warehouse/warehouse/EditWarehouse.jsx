@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 function EditWarehouse() {
   const { id } = useParams(); // get warehouse id from url
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
 
   const [form, setForm] = useState({
     name: '',
@@ -14,7 +15,14 @@ function EditWarehouse() {
 
   // Fetch warehouse data on mount
   useEffect(() => {
-    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/warehouses/${id}`)
+    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/warehouses/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch warehouse');
         return res.json();
@@ -49,6 +57,7 @@ function EditWarehouse() {
       method: 'PUT', // or PATCH depending on your API
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`, // token add
       },
       body: JSON.stringify(form),
     })

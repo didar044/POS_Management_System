@@ -4,9 +4,17 @@ import { useParams, NavLink } from 'react-router-dom'; // assuming dynamic route
 function ShowSales() {
   const { id } = useParams(); // get sale id from URL
   const [sale, setSale] = useState(null);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales/${id}`)
+    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => setSale(data))
       .catch(err => console.error('Error fetching sale:', err));
@@ -139,7 +147,7 @@ function ShowSales() {
             </div>
             <div className="col-lg-12 mt-3">
              
-              <NavLink to="/pages/sale/salelist" className="btn btn-submit">Back</NavLink>
+              <NavLink to="/app/pages/sale/salelist" className="btn btn-submit">Back</NavLink>
             </div>
           </div>
         </div>

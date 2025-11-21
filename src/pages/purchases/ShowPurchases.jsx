@@ -5,9 +5,16 @@ import './Show.css';
 function ShowPurchases() {
   const { id } = useParams();
   const [purchase, setPurchase] = useState(null);
-
+const token = localStorage.getItem('token');
   useEffect(() => {
-    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/purchases/${id}`)
+    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/purchases/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => setPurchase(data))
       .catch(err => console.error('Error fetching purchase data:', err));
