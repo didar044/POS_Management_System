@@ -6,43 +6,54 @@ function CustomerList() {
    const [loading, setLoading] = useState(true);
    
 
-  useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/customers')
-      .then(res => res.json())
-      .then(data =>{
-            setCustomers(data);
-            setLoading(false);
-      } )
-       .catch(err => {
-        console.error('Failed to fetch stocks:', err);
-        setLoading(false);
-      });
-  }, []);
+useEffect(() => {
+  const token = localStorage.getItem('token'); // token get
+
+  fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/customers', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
+    .then(res => res.json())
+    .then(data => {
+      setCustomers(data);
+      setLoading(false);
+    })
+    .catch(err => {
+      console.error('Failed to fetch customers:', err);
+      setLoading(false);
+    });
+}, []);
 
 
-  const deleteCustomer = async (id) => {
-    try {
-      const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/customers/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      });
+const deleteCustomer = async (id) => {
+  const token = localStorage.getItem('token'); // token get
+  try {
+    const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/customers/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`, // token add
+      },
+    });
 
-      if (!res.ok) throw new Error('Delete failed');
-      setCustomers((prev) => prev.filter((customer) => customer.id !== id));
-    } catch (err) {
-      console.error('Delete error:', err.message);
-    }
-  };
+    if (!res.ok) throw new Error('Delete failed');
+    setCustomers((prev) => prev.filter((customer) => customer.id !== id));
+  } catch (err) {
+    console.error('Delete error:', err.message);
+  }
+};
 
-  
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this customer?")) {
-      deleteCustomer(id);
-    }
-  };
+
+const handleDelete = (id) => {
+  if (window.confirm("Are you sure you want to delete this customer?")) {
+    deleteCustomer(id);
+  }
+};
   if (loading) return <p>Loading ...</p>;
   return (
     <div>
@@ -92,7 +103,7 @@ function CustomerList() {
                     <td>{customer.address || 'N/A'}</td>
                     <td>{customer.description || 'N/A'}</td>
                     <td>
-                      <NavLink className="me-3" to={`/pages/customer/customerlist/edit/${customer.id}`}>
+                      <NavLink className="me-3" to={`/app/pages/customer/customerlist/edit/${customer.id}`}>
                         <i className="bi bi-pencil-square" style={{ fontSize: '20px' }}></i>
                       </NavLink>
                        <button onClick={() => handleDelete(customer.id)} className="btn btn-link p-0">

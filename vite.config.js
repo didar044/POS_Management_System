@@ -4,8 +4,9 @@ import react from '@vitejs/plugin-react'
 // https:/vite.dev/config/
 export default defineConfig({
     
-  base: '/Laravel_React/dist/',
+   base: '/Laravel_React/dist/',
    // base:'./',
+   // base: '/laravel_vue/dist/',
    plugins: [react()],
 })
 

@@ -10,11 +10,19 @@ function PurchasesList() {
   });
   const [loading, setLoading] = useState(true);
   const [openStatusId, setOpenStatusId] = useState(null);
+  const token = localStorage.getItem('token');
 
   const fetchPurchases = async (page = 1) => {
     setLoading(false);
     try {
-      const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/purchases?page=${page}`);
+      const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/purchases?page=${page}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  });
       const json = await res.json();
       setPurchasesData(json);
     } catch (error) {
@@ -32,7 +40,12 @@ function PurchasesList() {
     if (!window.confirm('Are you sure you want to delete this purchase?')) return;
     try {
       const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/purchases/${id}`, {
-        method: 'DELETE',
+        method: 'DELETE', 
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`, 
+        },
       });
       if (res.ok) {
         fetchPurchases(purchasesData.current_page);
@@ -51,6 +64,7 @@ function PurchasesList() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, 
         },
         body: JSON.stringify({ status: newStatus }),
       });
@@ -96,7 +110,7 @@ if (loading) return <p>Loading Purchase List...</p>;
                     <th>Due</th>
                     
                     <th>Payment Status</th>
-                    <th>Actions</th>
+                    <th>Invoice</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -169,12 +183,12 @@ if (loading) return <p>Loading Purchase List...</p>;
                           </td>
                           <td>
                             <div className="d-flex align-items-center gap-2">
-                              <NavLink to={`/pages/purchases/productlist/edit/${purchase.id}`} title="Edit">
+                              <NavLink to={`/app/pages/purchases/productlist/edit/${purchase.id}`} title="Edit">
                                 <i className="bi bi-pencil-square" style={{ fontSize: 20 }}></i>
                               </NavLink>
     
                               
-                              <NavLink to={`/pages/purchases/productlist/show/${purchase.id}`} title="View">
+                              <NavLink to={`/app/pages/purchases/productlist/show/${purchase.id}`} title="View">
                                 <i className="bi bi-eye" style={{ fontSize: 20 }}></i>
                               </NavLink>
                               <button

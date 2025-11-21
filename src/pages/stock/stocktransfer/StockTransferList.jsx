@@ -3,10 +3,17 @@ import React, { useEffect, useState } from 'react';
 function StockTransferList() {
   const [stockTransfers, setStockTransfers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [updatingId, setUpdatingId] = useState(null);
+  const [updatingId, setUpdatingId] = useState(null);const token = localStorage.getItem('token');
 
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/stocktransfers')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/stocktransfers', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => {
         setStockTransfers(data);
@@ -27,7 +34,7 @@ function StockTransferList() {
 
         const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/stocktransfers/${id}/status`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' ,'Authorization': `Bearer ${token}`, },
         body: JSON.stringify({ status: newStatus }),
       });
 

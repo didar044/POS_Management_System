@@ -5,9 +5,17 @@ function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/products/${id}`)
+    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/products/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch product");
         return res.json();

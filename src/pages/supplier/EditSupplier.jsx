@@ -10,10 +10,18 @@ function EditSupplier() {
     phone: '',
     address: '',
   });
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     // Load supplier data
-    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/suppliers/${id}`)
+    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/suppliers/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => {
         setForm({
@@ -42,13 +50,14 @@ function EditSupplier() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, 
         },
         body: JSON.stringify(form),
       });
 
       if (res.ok) {
         alert('Supplier updated successfully!');
-        navigate('/pages/supplier/supplierlist'); // Change this route if needed
+        navigate('/app/pages/supplier/supplierlist'); // Change this route if needed
       } else {
         const data = await res.json();
         alert(data.message || 'Failed to update supplier.');

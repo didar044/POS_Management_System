@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 function AddExpanseCategorie() {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -15,21 +15,28 @@ function AddExpanseCategorie() {
     };
 
     try {
-      const res = await fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expensecategories', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+      const token = localStorage.getItem("token"); // token get
+
+      const res = await fetch(
+        "http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expensecategories",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`, // token add
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (res.ok) {
-        navigate('/pages/expansecategorie/expansecategorielist'); // redirect after success
+        navigate("/app/pages/expansecategorie/expansecategorielist"); // redirect after success
       } else {
-        console.error('Failed to add category');
+        console.error("Failed to add category");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
@@ -74,7 +81,10 @@ function AddExpanseCategorie() {
                 <button type="submit" className="btn btn-submit me-2">
                   Submit
                 </button>
-                <NavLink to="/pages/expansecategorie/expansecategorielist" className="btn btn-cancel">
+                <NavLink
+                  to="/app/pages/expansecategorie/expansecategorielist"
+                  className="btn btn-cancel"
+                >
                   Cancel
                 </NavLink>
               </div>

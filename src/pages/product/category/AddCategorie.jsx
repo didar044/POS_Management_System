@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+const token = localStorage.getItem("token");
 
 function AddCategorie() {
   const [brands, setBrands] = useState([]);
@@ -12,7 +13,13 @@ function AddCategorie() {
   });
  const navigate = useNavigate();
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands', {
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then((res) => res.json())
       .then((data) => {
         setBrands(data.brands || []);
@@ -44,6 +51,11 @@ function AddCategorie() {
     try {
       const res = await fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/caregoties', {
         method: 'POST',
+        headers: {
+            // "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`, // token add
+          },
         body: sendData,
       });
 
@@ -51,7 +63,7 @@ function AddCategorie() {
       if (res.ok) {
         alert('Category created successfully');
         setFormData({ name: '', brand_id: '', description: '', img: null });
-        navigate('/pages/product/categorielist');
+        navigate('/app/pages/product/categorielist');
       } else {
         console.error(result);
         alert('Failed to create category');
@@ -144,7 +156,7 @@ function AddCategorie() {
                 <button type="submit" className="btn btn-submit me-2">
                   Submit
                 </button>
-                <NavLink href="/pages/product/categorielist" className="btn btn-cancel">
+                <NavLink href="/app/pages/product/categorielist" className="btn btn-cancel">
                   Cancel
                 </NavLink>
               </div>

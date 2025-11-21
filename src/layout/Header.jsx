@@ -1,22 +1,38 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../public/assets/myimg/logo.png';
 import prologo from '../../public/assets/myimg/pos.jpg';
 import logoSmall from '../../public/assets/myimg/logo-small.png';
 
-
 export const Header = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      await fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      localStorage.removeItem('token'); 
+      navigate('/'); 
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="header">
       <div className="header-left active">
-        <NavLink to="./" className="logo">
+        <a href="./" className="logo">
           <img src={logo} alt="Logo" />
-          {/* <img src="/assets/myimg/logo.png" alt="Logo" /> */}
-        </NavLink>
-        <NavLink to="./" className="logo-small">
+        </a>
+        <a href="./" className="logo-small">
           <img src={logoSmall} alt="Small Logo" />
-          {/* <img src="/assets/myimg/logo-small.png" alt="Small Logo" /> */}
-        </NavLink>
+        </a>
         <a id="toggle_btn" href="javascript:void(0);"> </a>
       </div>
 
@@ -50,31 +66,6 @@ export const Header = () => {
           </div>
         </li>
 
-        {/* <li className="nav-item dropdown has-arrow flag-nav">
-          <a
-            className="nav-link dropdown-toggle"
-            data-bs-toggle="dropdown"
-            href="javascript:void(0);"
-            role="button"
-          >
-            <img src="assets/img/flags/us1.png" alt="" height="20" />
-          </a>
-          <div className="dropdown-menu dropdown-menu-right">
-            <a href="javascript:void(0);" className="dropdown-item">
-              <img src="assets/img/flags/us.png" alt="" height="16" /> English
-            </a>
-            <a href="javascript:void(0);" className="dropdown-item">
-              <img src="assets/img/flags/fr.png" alt="" height="16" /> French
-            </a>
-            <a href="javascript:void(0);" className="dropdown-item">
-              <img src="assets/img/flags/es.png" alt="" height="16" /> Spanish
-            </a>
-            <a href="javascript:void(0);" className="dropdown-item">
-              <img src="assets/img/flags/de.png" alt="" height="16" /> German
-            </a>
-          </div>
-        </li> */}
-
         <li className="nav-item dropdown">
           <a
             href="javascript:void(0);"
@@ -84,43 +75,6 @@ export const Header = () => {
             <i className="bi bi-bell" style={{ fontSize: '24px', color: '#6e5757' }}></i>
             <span className="badge rounded-pill">4</span>
           </a>
-          {/* <div className="dropdown-menu notifications">
-            <div className="topnav-dropdown-header">
-              <span className="notification-title">Notifications</span>
-              <a href="javascript:void(0)" className="clear-noti">
-                Clear All
-              </a>
-            </div>
-            <div className="noti-content">
-              <ul className="notification-list">
-                <li className="notification-message">
-                  <a href="activities.html">
-                    <div className="media d-flex">
-                      <span className="avatar flex-shrink-0">
-                        <img alt="" src="assets/img/profiles/avatar-02.jpg" />
-                      </span>
-                      <div className="media-body flex-grow-1">
-                        <p className="noti-details">
-                          <span className="noti-title">John Doe</span> added new
-                          task
-                          <span className="noti-title">
-                            Patient appointment booking
-                          </span>
-                        </p>
-                        <p className="noti-time">
-                          <span className="notification-time">4 mins ago</span>
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-               
-              </ul>
-            </div>
-            <div className="topnav-dropdown-footer">
-              <a href="activities.html">View all Notifications</a>
-            </div>
-          </div> */}
         </li>
 
         <li className="nav-item dropdown has-arrow main-drop">
@@ -130,8 +84,7 @@ export const Header = () => {
             data-bs-toggle="dropdown"
           >
             <span className="user-img">
-               <img src={prologo} alt="Smal" />
-              {/* <img src="/assets/myimg/pos.jpg" alt="" /> */}
+              <img src={prologo} alt="Smal" />
               <span className="status online"></span>
             </span>
           </a>
@@ -139,8 +92,7 @@ export const Header = () => {
             <div className="profilename">
               <div className="profileset">
                 <span className="user-img">
-                  {/* <img src="/assets/myimg/pos.jpg" alt="" /> */}
-                   <img src={prologo} alt="Smal" />
+                  <img src={prologo} alt="Smal" />
                   <span className="status online"></span>
                 </span>
                 <div className="profilesets">
@@ -149,14 +101,18 @@ export const Header = () => {
                 </div>
               </div>
               <hr className="m-0" />
-              <a className="dropdown-item" href="#">
+              <a className="dropdown-item" href="http://didar.intelsofts.com/">
                 <i className="me-2" data-feather="user"></i> My Profile
               </a>
-              <a className="dropdown-item" href="generalsettings.html">
+              <a className="dropdown-item" href="https://github.com/didar044/">
                 <i className="me-2" data-feather="settings"></i>Settings
               </a>
               <hr className="m-0" />
-              <a className="dropdown-item logout pb-0" href="signin.html">
+              <a
+                className="dropdown-item logout pb-0"
+                onClick={handleLogout}
+                style={{ cursor: 'pointer' }}
+              >
                 <img
                   src="assets/img/icons/log-out.svg"
                   className="me-2"
@@ -179,13 +135,13 @@ export const Header = () => {
           <i className="fa fa-ellipsis-v"></i>
         </a>
         <div className="dropdown-menu dropdown-menu-right">
-          <a className="dropdown-item" href="profile.html">
+          <a className="dropdown-item" href="http://didar.intelsofts.com/">
             My Profile
           </a>
-          <a className="dropdown-item" href="generalsettings.html">
+          <a className="dropdown-item" href="https://github.com/didar044/">
             Settings
           </a>
-          <a className="dropdown-item" href="signin.html">
+          <a className="dropdown-item" onClick={handleLogout} style={{ cursor: 'pointer' }}>
             Logout
           </a>
         </div>

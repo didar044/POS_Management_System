@@ -4,10 +4,18 @@ import { NavLink } from 'react-router-dom';
 function SupplierList() {
   const [suppliers, setSuppliers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem('token');
 
   // 🔹 Load suppliers from API
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/suppliers')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/suppliers', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then((res) => res.json())
       .then((data) => {
         setSuppliers(data);
@@ -27,6 +35,11 @@ function SupplierList() {
     try {
       const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/suppliers/${id}`, {
         method: 'DELETE',
+        headers: {
+            // "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`, // token add
+          },
       });
 
       if (res.ok) {
@@ -96,7 +109,7 @@ function SupplierList() {
                         <td>
                           <NavLink
                             className="me-3"
-                            to={`/pages/supplier/supplierlist/edit/${supplier.id}`}
+                            to={`/app/pages/supplier/supplierlist/edit/${supplier.id}`}
                           >
                             <i className="bi bi-pencil-square" style={{ fontSize: '20px' }}></i>
                           </NavLink>

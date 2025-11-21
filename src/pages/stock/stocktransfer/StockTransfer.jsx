@@ -15,9 +15,16 @@ function StockTransfer() {
     description: '',
     status: 'inprogress',  
   });
-
+const token = localStorage.getItem('token');
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/stocks')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/stocks', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) {
@@ -107,7 +114,7 @@ function StockTransfer() {
     try {
       const res = await fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/stocktransfers', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json','Authorization': `Bearer ${token}`,  },
         body: JSON.stringify(formData),
       });
 

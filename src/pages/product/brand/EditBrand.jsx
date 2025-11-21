@@ -9,59 +9,70 @@ function EditBrand() {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
   const [existingImage, setExistingImage] = useState(null);
+    const token = localStorage.getItem('token');
 
-  useEffect(() => {
-    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands/${id}`)
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch brand data');
-        return res.json();
-      })
-      .then(data => {
-        const brand = data.brand || {};
-        setBrandName(brand.name || '');
-        setDescription(brand.description || '');
-        if (brand.img) {
-          setExistingImage(`http://didar.intelsofts.com/Laravel_React/B_POS/public/img/brand/${brand.img}`);
-        } else {
-          setExistingImage(null);
-        }
-      })
-      .catch(error => {
-        console.error(error);
-        alert('Failed to load brand data');
-      });
-  }, [id]);
+ useEffect(() => {
+  fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands/${id}`, {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to fetch brand data');
+      return res.json();
+    })
+    .then(data => {
+      const brand = data.brand || {};
+      setBrandName(brand.name || '');
+      setDescription(brand.description || '');
+      setExistingImage(
+        brand.img
+          ? `http://didar.intelsofts.com/Laravel_React/B_POS/public/img/brand/${brand.img}`
+          : null
+      );
+    })
+    .catch(error => {
+      console.error(error);
+      alert('Failed to load brand data');
+    });
+}, [id]);
 
-  const handleFileChange = (e) => {
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData();
+  formData.append('name', brandName);
+  formData.append('description', description);
+  if (image) formData.append('img', image);
+  formData.append('_method', 'PUT');
+
+  try {
+    const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands/${id}`, {
+      method: 'POST',
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (!res.ok) {
+      throw new Error(`Update failed with status ${res.status}`);
+    }
+
+    alert('Brand updated successfully!');
+    navigate('/app/pages/product/brand');
+  } catch (error) {
+    console.error(error);
+    alert('Failed to update brand.');
+  }
+};
+
+
+   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setImage(e.target.files[0]);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append('name', brandName);
-    formData.append('description', description);
-    if (image) formData.append('img', image);
-    formData.append('_method', 'PUT'); // for Laravel PUT method spoofing
-
-    try {
-      const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands/${id}`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!res.ok) {
-        throw new Error(`Update failed with status ${res.status}`);
-      }
-
-      alert('Brand updated successfully!');
-      navigate('/pages/product/brand'); // Redirect after update
-    } catch (error) {
-      console.error(error);
-      alert('Failed to update brand.');
     }
   };
 
@@ -146,7 +157,7 @@ function EditBrand() {
                 <button type="submit" className="btn btn-submit me-2">
                   Update Brand
                 </button>
-                <a href="/pages/product/brand" className="btn btn-cancel">
+                <a href="/app/pages/product/brand" className="btn btn-cancel">
                   Cancel
                 </a>
               </div>

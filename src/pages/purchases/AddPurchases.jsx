@@ -19,23 +19,45 @@ function AddPurchases() {
   const [discountAmount, setDiscountAmount] = useState(0);
   const [shippingAmount, setShippingAmount] = useState(0);
   const [paidAmount, setPaidAmount] = useState(0);
+  const token = localStorage.getItem('token');
 
   const [items, setItems] = useState([
     { product_id: '', quantity: 1, unit_price: 0, discount: 0, tax_percent: 0, tax_amount: 0, subtotal: 0 },
   ]);
 
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/suppliers')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/suppliers', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => setSuppliers(data.data || data))
       .catch(console.error);
 
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/products')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/products', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => setProducts(data.data || data))
       .catch(console.error);
 
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/warehouses')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/warehouses', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => setWarehouses(data.data || data))
       .catch(console.error);
@@ -124,6 +146,7 @@ try {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
+      Authorization: `Bearer ${token}`
     },
     body: JSON.stringify(payload),
   });
@@ -136,7 +159,7 @@ try {
     const data = await res.json();
     console.log("Success:", data);
     alert("Purchase submitted!");
-    navigate('/pages/purchases/productlist');
+    navigate('/app/pages/purchases/productlist');
   }
 } catch (error) {
   console.error("Network error:", error);
@@ -282,7 +305,7 @@ try {
             {/* Submit */}
             <div className="mt-3">
               <button type="submit" className="btn btn-submit me-2">Submit</button>
-              <NavLink to="/pages/purchases/productlist" className="btn btn-cancel">Cancel</NavLink>
+              <NavLink to="/app/pages/purchases/productlist" className="btn btn-cancel">Cancel</NavLink>
             </div>
           </div>
         </div>

@@ -6,17 +6,24 @@ function Reciept() {
   const navigate = useNavigate();
   const [sale, setSale] = useState(null);
   const [loading, setLoading] = useState(true);
-
+const token = localStorage.getItem('token');
   useEffect(() => {
     if (!id) {
       console.error('No ID provided in URL');
-      navigate('/pages/sale/salelist'); // fallback if ID missing
+      navigate('/app/pages/sale/salelist'); // fallback if ID missing
       return;
     }
 
     console.log("Fetching sale receipt for ID:", id);
 
-    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales/${id}`)
+    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => {
         if (!res.ok) throw new Error("Sale not found");
         return res.json();
@@ -40,7 +47,7 @@ function Reciept() {
     <div>
        <div className="col-lg-12 mt-3">
                    
-                    <NavLink to="/pages/sale/saleinvoice" className="btn btn-submit">Back</NavLink>
+                    <NavLink to="/app/pages/sale/saleinvoice" className="btn btn-submit">Back</NavLink>
                   </div>
     <div className="receipt-wrapper container p-4" style={{ maxWidth: 800, margin: '0 auto' }}>
       <h2 className="text-center mb-3">Money Receipt</h2>

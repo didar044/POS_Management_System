@@ -1,39 +1,48 @@
-import React, { useState } from 'react';
-import { useNavigate, NavLink } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate, NavLink } from "react-router-dom";
 
 function AddBrand() {
-  const [brandName, setBrandName] = useState('');
-  const [description, setDescription] = useState('');
+  const [brandName, setBrandName] = useState("");
+  const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
+  const token = localStorage.getItem("token");
 
   const navigate = useNavigate(); // ✅ Here at top level
 
   const f = async () => {
     const formData = new FormData();
-    formData.append('name', brandName);
-    formData.append('description', description);
+    formData.append("name", brandName);
+    formData.append("description", description);
     if (image) {
-      formData.append('img', image);
-      console.log('Uploading image:', image);
+      formData.append("img", image);
+      console.log("Uploading image:", image);
     }
 
     try {
-      const res = await fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands', {
-        method: 'POST',
-        body: formData,
-      });
+      const res = await fetch(
+        "http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands",
+        {
+          method: "POST",
+          headers: {
+            // "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`, // token add
+          },
+          body: formData,
+        }
+      );
 
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
 
       const data = await res.json();
-      alert('✅ Brand created successfully!');
+      alert("✅ Brand created successfully!");
       console.log(data);
-      navigate('/pages/product/brand'); // Redirect after success
+      navigate("/app/pages/product/brand"); // Redirect after success
     } catch (error) {
-      console.error('❌ Failed to submit brand:', error);
-      alert('Failed to create brand. Please try again.');
+      console.error("❌ Failed to submit brand:", error);
+      alert("Failed to create brand. Please try again.");
     }
   };
 
@@ -90,7 +99,7 @@ function AddBrand() {
                     <div className="image-uploads">
                       <i
                         className="bx bx-cloud-upload"
-                        style={{ fontSize: '40px', color: '#555' }}
+                        style={{ fontSize: "40px", color: "#555" }}
                       ></i>
                       <h4>Drag and drop a file to upload</h4>
                     </div>
@@ -102,7 +111,10 @@ function AddBrand() {
                 <button type="submit" className="btn btn-submit me-2">
                   Submit
                 </button>
-                <NavLink to={`/pages/product/brand`} className="btn btn-cancel">
+                <NavLink
+                  to={`/app/pages/product/brand`}
+                  className="btn btn-cancel"
+                >
                   Cancel
                 </NavLink>
               </div>

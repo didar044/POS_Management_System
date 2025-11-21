@@ -16,28 +16,56 @@ function Saleorder() {
   const [status, setStatus] = useState('pending');
   const [paidAmount, setPaidAmount] = useState(0);
   const [description, setDescription] = useState('');
-
+const token = localStorage.getItem('token');
   const [items, setItems] = useState([
     { product_id: '', quantity: 1, unit_price: 0, discount: 0, tax_percent: 0, tax_amount: 0, subtotal: 0, available_quantity: 0 },
   ]);
 
   useEffect(() => {
-    fetch("http://didar.intelsofts.com/Laravel_React/B_POS/public/api/purchasesitems")
+    fetch("http://didar.intelsofts.com/Laravel_React/B_POS/public/api/purchasesitems", {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => setPurchaseItems(Array.isArray(data) ? data : []))
       .catch(err => console.error("Error loading purchase items:", err));
 
-    fetch("http://didar.intelsofts.com/Laravel_React/B_POS/public/api/customers")
+    fetch("http://didar.intelsofts.com/Laravel_React/B_POS/public/api/customers", {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => setCustomers(Array.isArray(data) ? data : data.data || []))
       .catch(err => console.error("Error loading customers:", err));
 
-    fetch("http://didar.intelsofts.com/Laravel_React/B_POS/public/api/warehouses")
+    fetch("http://didar.intelsofts.com/Laravel_React/B_POS/public/api/warehouses", {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => setWarehouses(Array.isArray(data) ? data : data.data || []))
       .catch(err => console.error("Error loading warehouses:", err));
 
-    fetch("http://didar.intelsofts.com/Laravel_React/B_POS/public/api/stocks")
+    fetch("http://didar.intelsofts.com/Laravel_React/B_POS/public/api/stocks", {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => setStocks(Array.isArray(data) ? data : []))
       .catch(err => console.error("Error loading stocks:", err));
@@ -136,14 +164,14 @@ function Saleorder() {
     try {
       const res = await fetch("http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",'Authorization': `Bearer ${token}`,  },
         body: JSON.stringify(payload),
       });
 
       const result = await res.json();
       if (res.ok) {
         alert("Sale  successfully");
-        navigate('/pages/sale/salelist');
+        navigate('/app/pages/sale/salelist');
       } else {
         console.error(result);
         alert("Error creating sale");
@@ -349,7 +377,7 @@ function Saleorder() {
               <button type="submit" className="btn btn-submit me-2">
                 Submit
               </button>
-              <NavLink to="/pages/sale/salelist" className="btn btn-cancel">
+              <NavLink to="/app/pages/sale/salelist" className="btn btn-cancel">
                 Cancel
               </NavLink>
             </div>

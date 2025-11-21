@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+const token = localStorage.getItem('token');
 
 
 function AddSupplier() {
@@ -24,7 +25,8 @@ function AddSupplier() {
       const res = await fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/suppliers', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, 
         },
         body: JSON.stringify(form)
       });
@@ -34,7 +36,7 @@ function AddSupplier() {
         alert('Supplier added successfully!');
         // Reset form
         setForm({ name: '', email: '', phone: '', address: '' });
-        navigate('/pages/supplier/supplierlist');
+        navigate('/app/pages/supplier/supplierlist');
       } else {
         alert(result.message || 'Error adding supplier.');
       }

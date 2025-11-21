@@ -7,6 +7,7 @@ function PurchasesReceipt() {
   const navigate = useNavigate();
   const [purchase, setPurchase] = useState(null);
   const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     if (!id) {
@@ -17,7 +18,14 @@ function PurchasesReceipt() {
 
     console.log("Fetching purchase receipt for ID:", id);
 
-    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/purchases/${id}`)
+    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/purchases/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => {
         if (!res.ok) throw new Error("Purchase not found");
         return res.json();
@@ -42,7 +50,7 @@ function PurchasesReceipt() {
   return (
     <div>
       <div className="col-lg-12 mt-3">
-        <NavLink to="/pages/purchases/purchasesinvoice" className="btn btn-submit">Back</NavLink>
+        <NavLink to="/app/pages/purchases/purchasesinvoice" className="btn btn-submit">Back</NavLink>
       </div>
 
       <div className="receipt-wrapper container p-4" style={{ maxWidth: 800, margin: '0 auto' }}>

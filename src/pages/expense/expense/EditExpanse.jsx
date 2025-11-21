@@ -14,14 +14,27 @@ function EditExpanse() {
   const [description, setDescription] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
+      const token = localStorage.getItem('token');
 
   // Load categories and expense data
   useEffect(() => {
     async function fetchData() {
       try {
         const [catRes, expRes] = await Promise.all([
-          fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expensecategories'),
-          fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expenses/${id}`)
+          fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expensecategories', {
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  }),
+          fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expenses/${id}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
         ]);
         const categoriesData = await catRes.json();
         const expenseData = await expRes.json();
@@ -59,12 +72,15 @@ function EditExpanse() {
     try {
       const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/expenses/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'Authorization': `Bearer ${token}`, 
+         },
         body: JSON.stringify(payload),
       });
 
       if (res.ok) {
-        navigate('/pages/expanse/expanselist');
+        navigate('/app/pages/expanse/expanselist');
       } else {
         const errorData = await res.json();
         alert('Update failed: ' + JSON.stringify(errorData));

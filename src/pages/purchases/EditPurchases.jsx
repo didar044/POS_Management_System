@@ -23,9 +23,17 @@ function EditPurchases() {
   const [paidAmount, setPaidAmount] = useState(0);
 
   const [items, setItems] = useState([]);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/purchases/${id}`)
+    fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/purchases/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => {
         const purchase = data.data || data;
@@ -50,17 +58,38 @@ function EditPurchases() {
       })
       .catch(console.error);
 
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/suppliers')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/suppliers', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => setSuppliers(data.data || data))
       .catch(console.error);
 
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/products')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/products', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => setProducts(data.data || data))
       .catch(console.error);
 
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/warehouses')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/warehouses', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => setWarehouses(data.data || data))
       .catch(console.error);
@@ -149,6 +178,7 @@ function EditPurchases() {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(payload),
       });
@@ -159,7 +189,7 @@ function EditPurchases() {
         alert("Error: " + JSON.stringify(errorData));
       } else {
         alert("Purchase updated successfully!");
-        navigate('/pages/purchases/productlist');
+        navigate('/app/pages/purchases/productlist');
       }
     } catch (error) {
       console.error("Network error:", error);

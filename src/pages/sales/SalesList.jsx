@@ -5,9 +5,17 @@ function SalesList() {
   const [salesData, setSalesData] = useState({ data: [] });
   const [loading, setLoading] = useState(true);
   const [openStatusId, setOpenStatusId] = useState(null);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => {
         setSalesData({ data });
@@ -23,11 +31,21 @@ const handleStatusChange = async (id, newStatus) => {
   try {
     await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales/${id}/status`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, 
+       },
       body: JSON.stringify({ status: newStatus }),
     });
     // refetch sales after update
-    const res = await fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales');
+    const res = await fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  });
     const data = await res.json();
     setSalesData({ data });
   } catch (err) {
@@ -41,6 +59,11 @@ const handleDelete = async (id) => {
   try {
     const res = await fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/sales/${id}`, {
       method: 'DELETE',
+      headers: {
+            // "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`, // token add
+          },
     });
 
     if (!res.ok) throw new Error('Delete failed');
@@ -155,10 +178,10 @@ const handleDelete = async (id) => {
                           </td>
                           <td>
                             <div className="d-flex align-items-center gap-2">
-                              <NavLink to={`/pages/sale/salelist/edit/${sale.id}`} title="Edit">
+                              <NavLink to={`/app/pages/sale/salelist/edit/${sale.id}`} title="Edit">
                                 <i className="bi bi-pencil-square" style={{ fontSize: 20 }}></i>
                               </NavLink>
-                              <NavLink to={`/pages/sale/salelist/show/${sale.id}`} title="View">
+                              <NavLink to={`/app/pages/sale/salelist/show/${sale.id}`} title="View">
                                 <i className="bi bi-eye" style={{ fontSize: 20 }}></i>
                               </NavLink>
                               <button onClick={() => handleDelete(sale.id)} className="btn btn-link p-0">

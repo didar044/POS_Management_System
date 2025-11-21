@@ -8,6 +8,7 @@ function EditProduct() {
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState([]);
+    const token = localStorage.getItem('token');
   // const [suppliers, setSuppliers] = useState([]);
 
   const [formData, setFormData] = useState({
@@ -30,7 +31,14 @@ function EditProduct() {
 
   // Load brands
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/brands', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(json => setBrands(json.brands || []))
       .catch(err => console.error('Failed to fetch brands:', err));
@@ -38,7 +46,14 @@ function EditProduct() {
 
   // Load categories
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/caregoties')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/caregoties', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(json => {
         const data = Array.isArray(json) ? json : json.categories || json.data || [];
@@ -61,7 +76,14 @@ function EditProduct() {
   // Load product data if editing
   useEffect(() => {
     if (id) {
-      fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/products/${id}`)
+      fetch(`http://didar.intelsofts.com/Laravel_React/B_POS/public/api/products/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
         .then(res => res.json())
         .then(product => {
           setFormData({
@@ -164,6 +186,7 @@ const handleSubmit = async (e) => {
       body: formDataToSend,
       headers: {
         Accept: 'application/json',
+        Authorization: `Bearer ${token}`, // token add
       },
     });
 
@@ -175,7 +198,7 @@ const handleSubmit = async (e) => {
     }
      res.json();
     alert(id ? 'Product updated successfully!' : 'Product added successfully!');
-    navigate('/pages/product/productlist'); 
+    navigate('/app/pages/product/productlist'); 
   } catch (err) {
     console.error('Submit error:', err);
     alert('Error submitting form');

@@ -3,9 +3,17 @@ import React, { useEffect, useState } from 'react';
 function StockList() {
   const [stocks, setStocks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/stocks')
+    fetch('http://didar.intelsofts.com/Laravel_React/B_POS/public/api/stocks', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`, // token add
+    },
+  })
       .then(res => res.json())
       .then(data => {
         setStocks(data);
