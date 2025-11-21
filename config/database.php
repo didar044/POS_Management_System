@@ -42,45 +42,45 @@ return [
             'synchronous' => null,
         ],
 
-        'mysql' => [
-            'driver' => 'mysql',
-            'url' => env('DB_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
-            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => env('DB_CHARSET', 'utf8mb4'),
-            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
-            'prefix' => env('DB_TABLE_PREFIX', 'core_'),
-            'prefix_indexes' => true,
-            'strict' => true,
-            'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
-        ],
+        // 'mysql' => [
+        //     'driver' => 'mysql',
+        //     'url' => env('DB_URL'),
+        //     'host' => env('DB_HOST', '127.0.0.1'),
+        //     'port' => env('DB_PORT', '3306'),
+        //     'database' => env('DB_DATABASE', 'laravel'),
+        //     'username' => env('DB_USERNAME', 'root'),
+        //     'password' => env('DB_PASSWORD', ''),
+        //     'unix_socket' => env('DB_SOCKET', ''),
+        //     'charset' => env('DB_CHARSET', 'utf8mb4'),
+        //     'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+        //     'prefix' => env('DB_TABLE_PREFIX', 'core_'),
+        //     'prefix_indexes' => true,
+        //     'strict' => true,
+        //     'engine' => null,
+        //     'options' => extension_loaded('pdo_mysql') ? array_filter([
+        //         PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+        //     ]) : [],
+        // ],
 
-    //     'mysql' => [
-    //     'driver' => 'mysql',                      // Use the MySQL driver
-    //     'url' => env('DB_URL'),                   // Optional: full database URL if set in env
-    //     'host' => env('DB_HOST', '127.0.0.1'),   // Database host, default localhost
-    //     'port' => env('DB_PORT', '3306'),        // Database port, default MySQL port 3306
-    //     'database' => env('DB_DATABASE', ''), // Database name
-    //     'username' => env('DB_USERNAME', ''),     // Database username
-    //     'password' => env('DB_PASSWORD', ''),          // Database password
-    //     'unix_socket' => env('DB_SOCKET', ''),         // Optional unix socket path, usually empty on Windows
-    //     'charset' => env('DB_CHARSET', 'utf8mb4'),     // Character set to use for connection
-    //     'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),  // Collation for string comparison
-    //     'prefix' => env('DB_TABLE_PREFIX', 'core_'),  // Table prefix added before table names (e.g. core_users)
-    //     'prefix_indexes' => true,                      // Whether index names are prefixed (recommended)
-    //     'strict' => true,                              // Enable strict SQL mode for better error handling
-    //     'engine' => null,                              // Database engine, null means default
-    //     'options' => extension_loaded('pdo_mysql') ? array_filter([
-    //         PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),  // Optional SSL CA file for secure MySQL connections
-    //     ]) : [],
-    // ],
+       'mysql' => [
+        'driver' => 'mysql',                      // Use the MySQL driver
+        'url' => env('DB_URL'),                   // Optional: full database URL if set in env
+        'host' => env('DB_HOST', '127.0.0.1'),   // Database host, default localhost
+        'port' => env('DB_PORT', '3306'),        // Database port, default MySQL port 3306
+        'database' => env('DB_DATABASE', 'wdpf62_didar'), // Database name
+        'username' => env('DB_USERNAME', 'didar'),     // Database username
+        'password' => env('DB_PASSWORD', '0409@;;'),          // Database password
+        'unix_socket' => env('DB_SOCKET', ''),         // Optional unix socket path, usually empty on Windows
+        'charset' => env('DB_CHARSET', 'utf8mb4'),     // Character set to use for connection
+        'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),  // Collation for string comparison
+        'prefix' => env('DB_TABLE_PREFIX', 'core_'),  // Table prefix added before table names (e.g. core_users)
+        'prefix_indexes' => true,                      // Whether index names are prefixed (recommended)
+        'strict' => true,                              // Enable strict SQL mode for better error handling
+        'engine' => null,                              // Database engine, null means default
+        'options' => extension_loaded('pdo_mysql') ? array_filter([
+            PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),  // Optional SSL CA file for secure MySQL connections
+        ]) : [],
+    ],
 
 
         'mariadb' => [
