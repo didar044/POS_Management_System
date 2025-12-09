@@ -68,8 +68,8 @@ return [
         'host' => env('DB_HOST', '127.0.0.1'),   // Database host, default localhost
         'port' => env('DB_PORT', '3306'),        // Database port, default MySQL port 3306
         'database' => env('DB_DATABASE', 'wdpf62_didar'), // Database name
-        'username' => env('DB_USERNAME', 'didar'),     // Database username
-        'password' => env('DB_PASSWORD', '0409@;;'),          // Database password
+        'username' => env('DB_USERNAME', 'dr'),     // Database username
+        'password' => env('DB_PASSWORD', ''),          // Database password
         'unix_socket' => env('DB_SOCKET', ''),         // Optional unix socket path, usually empty on Windows
         'charset' => env('DB_CHARSET', 'utf8mb4'),     // Character set to use for connection
         'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),  // Collation for string comparison
